@@ -1,6 +1,9 @@
 function resolveStackOutput(plugin, outputKey) {
   const provider = plugin.serverless.getProvider('aws');
   const awsCredentials = provider.getCredentials();
+  if (!awsCredentials.credentials) {
+    awsCredentials.credentials = new provider.sdk.Credentials(awsCredentials);
+  }
   const cfn = new provider.sdk.CloudFormation({
     region: provider.getRegion(),
     credentials: awsCredentials.credentials
